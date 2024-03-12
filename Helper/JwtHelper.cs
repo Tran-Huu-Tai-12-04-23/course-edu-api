@@ -12,9 +12,9 @@ public class JwtHelper
 {
     public static Token GenerateToken(JwtData jwtData, in User user)
     {
-        var acessToken = GenerateTokenString(jwtData, user, 15);
+        var accessToken = GenerateTokenString(jwtData, user, 15);
         var refreshToken = GenerateTokenString(jwtData, user, 35);
-        return new Token(acessToken, refreshToken);
+        return new Token(accessToken, refreshToken);
     }
 
     public static string GenerateTokenString(JwtData jwtData, User user, in int time)

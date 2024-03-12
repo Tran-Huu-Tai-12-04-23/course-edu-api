@@ -17,7 +17,7 @@
             EndColor = endColor;
         }
   
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Title { get; set; }
         public string Subtitle { get; set; }
         public string Thumbnails { get; set; }

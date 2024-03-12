@@ -44,19 +44,24 @@ namespace course_edu_api.Controllers
         {
             var response = new Response<User, User>();
             var existingUser = await _context.Users.SingleOrDefaultAsync(u => u.Email == model.Email);
-            if (existingUser != null)
+            if (existingUser != null && existingUser.Password != string.Empty)
             {
                 response.Status = BadRequest().StatusCode;
                 response.Message = "Email đã tồn tại trong hệ thống! Vui lòng thử email khác.";
-                response.Data = null;
                 response.Meta = model;
                 return Ok(response);
+            }else if (existingUser is { Password: "" })
+            { 
+                var hashPass = HashPassword(model.Password);
+                existingUser.Password = hashPass;
+                await _context.SaveChangesAsync();
+                return Ok();
             }
             // Hash the password
-            string hashedPassword = HashPassword(model.Password);
+            var hashedPassword = HashPassword(model.Password);
 
             // Create a new user
-            User newUser = new User
+            var newUser = new User
             {
                 Email = model.Email,
                 Password = hashedPassword
@@ -103,7 +108,30 @@ namespace course_edu_api.Controllers
             // Authentication successful
             return Ok(response);
         }
-
+       [HttpPost("login-with-google")]
+       public async Task<ActionResult> LoginWithGoogle([FromBody] User model)
+       {
+           var response = new Response<User,Token>();
+           // Find the user by email
+           var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+           if (user == null )
+           {
+                _context.Users.Add(model);
+                await _context.SaveChangesAsync();
+           }
+           var issuer = this._configuration["JwtTokenSettings:Issuer"] ?? string.Empty; 
+           var audience = this._configuration["JwtTokenSettings:Audience"] ?? string.Empty;
+           var key = this._configuration["JwtTokenSettings:Key"] ?? string.Empty;
+           var jwtData = new JwtData(issuer, audience, key);
+           var token = JwtHelper.GenerateToken(jwtData, user ?? model);
+           response.Data = token;
+           response.Message = "Đăng nhập thành công!";
+           response.Status = 200;
+           response.Meta = user ?? model;
+           // Authentication successful
+           return Ok(response);
+       }
+       
         private string HashPassword(string password)
         {
             // Generate a secure random salt

@@ -20,23 +20,38 @@
             this.Thumbnails = "";
         }
 
-        public Course(string title, string description, double price, string thumbnails, string adviseVideo, TypeCourse typeCourse)
+        public Course(string title, string description, double price, string thumbnails, string adviseVideo, CategoryCourse categoryCourse)
         {
             Title = title;
             Description = description;
             Price = price;
             Thumbnails = thumbnails;
             AdviseVideo = adviseVideo;
-            TypeCourse = typeCourse;
+            CategoryCourse = categoryCourse;
         }
 
-        public int Id { get; set; }
+        public Course(string title, string description, double price, string subTitle, string target, string requireSkill, string thumbnails, string adviseVideo, CategoryCourse categoryCourse)
+        {
+            Title = title;
+            Description = description;
+            Price = price;
+            SubTitle = subTitle;
+            Target = target;
+            RequireSkill = requireSkill;
+            Thumbnails = thumbnails;
+            AdviseVideo = adviseVideo;
+            CategoryCourse = categoryCourse;
+        }
+        public long Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public double Price { get; set; }
+        public string SubTitle { get; set; } =  string.Empty;
+        public string Target { get; set; } = string.Empty;
+        public string RequireSkill { get; set; } =  string.Empty;
         public string Thumbnails { get; set; }
         public string AdviseVideo { get; set; }
         
-        public TypeCourse TypeCourse { get; set; }
+        public CategoryCourse CategoryCourse { get; set; }
     }
 }

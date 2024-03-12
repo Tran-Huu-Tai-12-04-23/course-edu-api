@@ -21,16 +21,16 @@ namespace course_edu_api.Controllers
         [HttpGet]
         public async Task<ActionResult> GetHome()
         {
-            int size = 3;
-            var typeCourses = await _context.TypeCourses.ToListAsync();
+            var size = 10;
+            var typeCourses = await _context.CategoriesCourse.ToListAsync();
             var homeResponse = new HomeResponse();
             var courseResList = new List<CourseResponse>();
 
             foreach (var type in typeCourses)
             {
                 var courseRes = new CourseResponse();
-                var courses = await GetCourseByType(type, size); // Sử dụng await ở đây
-                courseRes.TypeCourse = type;
+                var courses = await GetCourseByType(type, size); 
+                courseRes.CategoryCourse = type;
                 courseRes.Courses = courses;
                 courseResList.Add(courseRes);
             }
@@ -38,18 +38,18 @@ namespace course_edu_api.Controllers
             var banners = _context.Banners.ToListAsync();
 
             homeResponse.CourseRes = courseResList;
-            homeResponse.TypeCourses = typeCourses;
+            homeResponse.CategoriesCourse = typeCourses;
             homeResponse.Banners = banners.Result;
     
             return Ok(homeResponse);
         }
 
-        private async Task<Course[]> GetCourseByType(TypeCourse typeCourse, int size)
+        private async Task<Course[]> GetCourseByType(CategoryCourse categoryCourse, int size)
         {
             var courses = await _context.Courses
-                .Include(course => course.TypeCourse)
-                .Where(course => course.TypeCourse.TypeName == typeCourse.TypeName)
-                .Take(size) // Sử dụng Take(size) thay vì Skip và Take
+                .Include(course => course.CategoryCourse)
+                .Where(course => course.CategoryCourse.CategoryName == categoryCourse.CategoryName)
+                .Take(size) 
                 .ToArrayAsync();
 
             return courses;

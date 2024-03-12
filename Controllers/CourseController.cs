@@ -21,8 +21,8 @@ namespace course_edu_api.Controllers
         public async Task<ActionResult> GetCourses()
         {
             var groupedCourses = await _context.Courses
-                .Include(course => course.TypeCourse)
-                .GroupBy(course => course.TypeCourse.TypeName)
+                .Include(course => course.CategoryCourse)
+                .GroupBy(course => course.CategoryCourse.CategoryName)
                 .ToListAsync();
 
             var coursesGroupedByType = groupedCourses
