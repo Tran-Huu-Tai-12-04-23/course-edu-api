@@ -8,14 +8,14 @@ public class HomeResponse
     {
     }
 
-    public HomeResponse(List<CourseResponse> courseRes, List<TypeCourse> typeCourses)
+    public HomeResponse(List<CourseResponse> courseRes, List<CategoryCourse> categoriesCourse)
     {
         CourseRes = courseRes;
-        TypeCourses = typeCourses;
+        CategoriesCourse = categoriesCourse;
     }
     
 
     public List<CourseResponse> CourseRes { get; set; }
-    public List<TypeCourse> TypeCourses { get; set; }
+    public List<CategoryCourse> CategoriesCourse { get; set; }
     public List<Banner> Banners { get; set; }
 }

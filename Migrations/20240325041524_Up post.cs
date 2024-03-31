@@ -5,24 +5,24 @@
 namespace course_edu_api.Migrations
 {
     /// <inheritdoc />
-    public partial class ver3banner : Migration
+    public partial class Uppost : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "LinkAction",
-                table: "Banners",
-                newName: "ActionLink");
+                name: "StatePost",
+                table: "Posts",
+                newName: "Status");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "ActionLink",
-                table: "Banners",
-                newName: "LinkAction");
+                name: "Status",
+                table: "Posts",
+                newName: "StatePost");
         }
     }
 }

@@ -8,21 +8,21 @@ public class CourseResponse
     {
     }
 
-    public CourseResponse(TypeCourse typeCourse, Course[] courses)
+    public CourseResponse(CategoryCourse categoryCourse, Course[] courses)
     {
-        TypeCourse = typeCourse;
+        CategoryCourse = categoryCourse;
         Courses = courses;
     }
 
-    public CourseResponse(TypeCourse typeCourse, Course[] courses, int size, int page)
+    public CourseResponse(CategoryCourse categoryCourse, Course[] courses, int size, int page)
     {
-        TypeCourse = typeCourse;
+        CategoryCourse = categoryCourse;
         Courses = courses;
         Size = size;
         Page = page;
     }
 
-    public TypeCourse TypeCourse { get; set; }
+    public CategoryCourse CategoryCourse { get; set; }
     public Course[] Courses { get; set; }
     public int Size { get; set; }
     public int Page { get; set; }

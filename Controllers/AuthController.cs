@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using Azure;
 using course_edu_api.Data.ResponseModels;
 using course_edu_api.Helper;
+using course_edu_api.Service;
+using course_edu_api.Service.impl;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace course_edu_api.Controllers
@@ -25,11 +27,13 @@ namespace course_edu_api.Controllers
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IUserSettingService _userSettingService ;
 
-        public AuthController(DataContext context,IConfiguration configuration)
+        public AuthController(DataContext context,IConfiguration configuration, IUserSettingService userSettingService)
         {
             this._context = context;
             this._configuration = configuration;
+            this._userSettingService = userSettingService;
         }
 
         [HttpGet]
@@ -44,24 +48,31 @@ namespace course_edu_api.Controllers
         {
             var response = new Response<User, User>();
             var existingUser = await _context.Users.SingleOrDefaultAsync(u => u.Email == model.Email);
-            if (existingUser != null)
+            if (existingUser != null && existingUser.Password != string.Empty)
             {
                 response.Status = BadRequest().StatusCode;
                 response.Message = "Email đã tồn tại trong hệ thống! Vui lòng thử email khác.";
-                response.Data = null;
                 response.Meta = model;
                 return Ok(response);
+            }else if (existingUser is { Password: "" })
+            { 
+                var hashPass = HashPassword(model.Password);
+                existingUser.Password = hashPass;
+                await _context.SaveChangesAsync();
+                return Ok();
             }
             // Hash the password
-            string hashedPassword = HashPassword(model.Password);
-
+            var hashedPassword = HashPassword(model.Password);
             // Create a new user
-            User newUser = new User
+            var newUser = new User
             {
                 Email = model.Email,
                 Password = hashedPassword
             };
 
+            var userSetting = await this._userSettingService.CreateUserSetting(new UserSetting());
+            
+            newUser.UserSetting = userSetting;
             // Add the user to the database
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
@@ -103,7 +114,32 @@ namespace course_edu_api.Controllers
             // Authentication successful
             return Ok(response);
         }
-
+       [HttpPost("login-with-google")]
+       public async Task<ActionResult> LoginWithGoogle([FromBody] User model)
+       {
+           var response = new Response<User,Token>();
+           // Find the user by email
+           var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+           if (user == null )
+           {
+               var userSetting = await this._userSettingService.CreateUserSetting(new UserSetting());
+                model.UserSetting = userSetting;
+                _context.Users.Add(model);
+                await _context.SaveChangesAsync();
+           }
+           var issuer = this._configuration["JwtTokenSettings:Issuer"] ?? string.Empty; 
+           var audience = this._configuration["JwtTokenSettings:Audience"] ?? string.Empty;
+           var key = this._configuration["JwtTokenSettings:Key"] ?? string.Empty;
+           var jwtData = new JwtData(issuer, audience, key);
+           var token = JwtHelper.GenerateToken(jwtData, user ?? model);
+           response.Data = token;
+           response.Message = "Đăng nhập thành công!";
+           response.Status = 200;
+           response.Meta = user ?? model;
+           // Authentication successful
+           return Ok(response);
+       }
+       
         private string HashPassword(string password)
         {
             // Generate a secure random salt

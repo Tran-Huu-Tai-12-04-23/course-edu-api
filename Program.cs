@@ -1,5 +1,8 @@
 using System.Text;
 using course_edu_api.Data;
+using course_edu_api.Entities;
+using course_edu_api.Service;
+using course_edu_api.Service.impl;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +16,12 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Roles.User, policy => policy.RequireRole(Roles.User));
+    options.AddPolicy(Roles.Admin, policy => policy.RequireRole(Roles.Admin));
 });
 
 //add services authentication
@@ -35,9 +44,6 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuerSigningKey = true
     };
 });
-builder.Services.AddAuthorization();
-// Add services to the container.
-builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -48,6 +54,15 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 });
+
+// Add services to the container.
+builder.Services.AddControllers();
+builder.Services.AddScoped<IPostService, ImplPostService>();
+builder.Services.AddScoped<IUserService, ImplUserService>();
+builder.Services.AddScoped<ISubItemPostService, ImplSubItemPostService>();
+builder.Services.AddScoped<ICourseService, ImplCourseService>();
+builder.Services.AddScoped<ICategoryService, ImplCategoryService>();
+builder.Services.AddScoped<IUserSettingService, ImplUserSettingService>();
 
 var app = builder.Build();
 app.UseCors();
