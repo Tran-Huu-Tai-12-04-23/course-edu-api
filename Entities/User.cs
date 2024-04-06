@@ -22,12 +22,14 @@
 
             public string Email{ get; set; } = string.Empty;
             public string Password { get; set; } =  string.Empty;
-            public Role Role { get; set; } =  Role.User;
-            public string FirstName { get; set; } =  string.Empty;
-            public string LastName { get; set; } =  string.Empty;
-            public string FullName { get; set; } =  string.Empty;
-            public string Bio { get; set; } =  string.Empty;
-            public string Avatar { get; set; } =  string.Empty;
+            public Role Role { get; set; } = Role.User;
+            public string? FirstName { get; set; } =  string.Empty;
+            public string? LastName { get; set; } =  string.Empty;
+            public string? FullName { get; set; } =  string.Empty;
+            public string? Bio { get; set; } =  string.Empty;
+            public string? Avatar { get; set; } =  string.Empty;
+            public string? TokenVerify { get; set; } = string.Empty;
+            public DateTime? VerifyAt { get; set; } = null;
             
             public UserSetting? UserSetting { get; set; }
             

@@ -47,10 +47,12 @@ public class Lesson
     public long Id { get; set; }
     public TypeLesson Type { get; set; }
     public string Title { get; set; }
+    public int Index { get; set; }
     public string Description { get; set; }
-    public List<Question> Quiz { get; set; }
-    public VideoLesson Video { get; set; }
-    public PostLesson Post { get; set; }
+    
+    public List<Question>? Quiz { get; set; }
+    public VideoLesson? Video { get; set; }
+    public PostLesson? Post { get; set; }
 }
 
 

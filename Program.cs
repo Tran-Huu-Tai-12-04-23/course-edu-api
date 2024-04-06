@@ -48,6 +48,8 @@ builder.Services.AddAuthentication(x =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
+
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -63,6 +65,9 @@ builder.Services.AddScoped<ISubItemPostService, ImplSubItemPostService>();
 builder.Services.AddScoped<ICourseService, ImplCourseService>();
 builder.Services.AddScoped<ICategoryService, ImplCategoryService>();
 builder.Services.AddScoped<IUserSettingService, ImplUserSettingService>();
+builder.Services.AddScoped<IEmailService, ImplEmailService>();
+builder.Services.AddScoped<IAuthService, ImplAuthService>();
+builder.Services.AddScoped<IPaymentService, ImplPaymentService>();
 
 var app = builder.Build();
 app.UseCors();
@@ -79,5 +84,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();

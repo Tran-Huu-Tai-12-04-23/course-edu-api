@@ -1,8 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using course_edu_api.Data;
 using course_edu_api.Entities;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
@@ -53,4 +55,59 @@ public class JwtHelper
 
         return stringToken;
     }
+    public static string GenerateHash(string input)
+    {
+        using (SHA256 sha256Hash = SHA256.Create())
+        {
+            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                builder.Append(bytes[i].ToString("x2"));
+            }
+            return builder.ToString();
+        }
+    }
+    
+    public static bool VerifyPassword(string enteredPassword, string storedPasswordHash)
+    {
+        byte[] storedBytes = Convert.FromBase64String(storedPasswordHash);
+        // Extract the salt from the stored hash
+        byte[] salt = storedBytes.Take(128 / 8).ToArray();
+        // Hash the entered password with the retrieved salt
+        byte[] enteredHash = KeyDerivation.Pbkdf2(
+            password: enteredPassword,
+            salt: salt,
+            prf: KeyDerivationPrf.HMACSHA256,
+            iterationCount: 10000,
+            numBytesRequested: 256 / 8);
+        // Compare the computed hash with the stored hash
+        return enteredHash.SequenceEqual(storedBytes.Skip(128 / 8));
+    }
+    
+    public static string HashPassword(string password)
+    {
+        // Generate a secure random salt
+        var salt = new byte[128 / 8];
+        using (var rng = RandomNumberGenerator.Create())
+        {
+            rng.GetBytes(salt);
+        }
+        // Hash the password using the generated salt
+        byte[] hashed = KeyDerivation.Pbkdf2(
+            password: password,
+            salt: salt,
+            prf: KeyDerivationPrf.HMACSHA256,
+            iterationCount: 10000,
+            numBytesRequested: 256 / 8);
+
+        // Combine salt and hashed password
+        byte[] combined = new byte[salt.Length + hashed.Length];
+        salt.CopyTo(combined, 0);
+        hashed.CopyTo(combined, salt.Length);
+
+        return Convert.ToBase64String(combined);
+    }
+    
 }

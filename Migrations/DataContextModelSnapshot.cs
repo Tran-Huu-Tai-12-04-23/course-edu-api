@@ -171,7 +171,13 @@ namespace course_edu_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("PostId")
+                    b.Property<long?>("GroupLessonId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("PostId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Title")
@@ -181,12 +187,19 @@ namespace course_edu_api.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.Property<long>("VideoId")
+                    b.Property<long?>("UserCourseId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("VideoId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupLessonId");
+
                     b.HasIndex("PostId");
+
+                    b.HasIndex("UserCourseId");
 
                     b.HasIndex("VideoId");
 
@@ -217,6 +230,36 @@ namespace course_edu_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NoteLessons");
+                });
+
+            modelBuilder.Entity("course_edu_api.Entities.PaymentHistory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<double?>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("IsPayment")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("PaymentAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PaymentType")
+                        .HasColumnType("int");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PaymentHistorie");
                 });
 
             modelBuilder.Entity("course_edu_api.Entities.Post", b =>
@@ -294,9 +337,12 @@ namespace course_edu_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImgUrl")
+                    b.Property<string>("ImgURL")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
 
                     b.Property<long?>("LessonId")
                         .HasColumnType("bigint");
@@ -362,11 +408,9 @@ namespace course_edu_api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Avatar")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Bio")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -374,15 +418,12 @@ namespace course_edu_api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
@@ -392,14 +433,59 @@ namespace course_edu_api.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
+                    b.Property<string>("TokenVerify")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("UserSettingId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("VerifyAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserSettingId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("course_edu_api.Entities.UserCourse", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CourseId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("CurrentLessonId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsPayment")
+                        .HasColumnType("bit");
+
+                    b.Property<long?>("PaymentHistoryId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("RegisterAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("CurrentLessonId");
+
+                    b.HasIndex("PaymentHistoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserCourse");
                 });
 
             modelBuilder.Entity("course_edu_api.Entities.UserSetting", b =>
@@ -479,21 +565,36 @@ namespace course_edu_api.Migrations
 
             modelBuilder.Entity("course_edu_api.Entities.Lesson", b =>
                 {
+                    b.HasOne("course_edu_api.Entities.GroupLesson", null)
+                        .WithMany("Lessons")
+                        .HasForeignKey("GroupLessonId");
+
                     b.HasOne("course_edu_api.Entities.PostLesson", "Post")
                         .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PostId");
+
+                    b.HasOne("course_edu_api.Entities.UserCourse", null)
+                        .WithMany("LessonPassed")
+                        .HasForeignKey("UserCourseId");
 
                     b.HasOne("course_edu_api.Entities.VideoLesson", "Video")
                         .WithMany()
-                        .HasForeignKey("VideoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("VideoId");
 
                     b.Navigation("Post");
 
                     b.Navigation("Video");
+                });
+
+            modelBuilder.Entity("course_edu_api.Entities.PaymentHistory", b =>
+                {
+                    b.HasOne("course_edu_api.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("course_edu_api.Entities.Post", b =>
@@ -534,9 +635,45 @@ namespace course_edu_api.Migrations
                     b.Navigation("UserSetting");
                 });
 
+            modelBuilder.Entity("course_edu_api.Entities.UserCourse", b =>
+                {
+                    b.HasOne("course_edu_api.Entities.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("course_edu_api.Entities.Lesson", "CurrentLesson")
+                        .WithMany()
+                        .HasForeignKey("CurrentLessonId");
+
+                    b.HasOne("course_edu_api.Entities.PaymentHistory", "PaymentHistory")
+                        .WithMany()
+                        .HasForeignKey("PaymentHistoryId");
+
+                    b.HasOne("course_edu_api.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("CurrentLesson");
+
+                    b.Navigation("PaymentHistory");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("course_edu_api.Entities.Course", b =>
                 {
                     b.Navigation("GroupLessons");
+                });
+
+            modelBuilder.Entity("course_edu_api.Entities.GroupLesson", b =>
+                {
+                    b.Navigation("Lessons");
                 });
 
             modelBuilder.Entity("course_edu_api.Entities.Lesson", b =>
@@ -552,6 +689,11 @@ namespace course_edu_api.Migrations
             modelBuilder.Entity("course_edu_api.Entities.PostLesson", b =>
                 {
                     b.Navigation("items");
+                });
+
+            modelBuilder.Entity("course_edu_api.Entities.UserCourse", b =>
+                {
+                    b.Navigation("LessonPassed");
                 });
 #pragma warning restore 612, 618
         }

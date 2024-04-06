@@ -198,5 +198,13 @@ namespace course_edu_api.Data
         public DbSet<SubItemPost?> SubItemPosts { get; set; }
         public DbSet<NoteLesson> NoteLessons { get; set; }
         public DbSet<UserSetting> UserSettings { get; set; }
+        
+        public DbSet<Question?> Question { get; set; }
+        public DbSet<VideoLesson?> VideoLesson { get; set; }
+        public DbSet<PostLesson?> PostLesson { get; set; }
+        public DbSet<UserCourse?> UserCourse { get; set; }
+        public DbSet<PaymentHistory?> PaymentHistorie { get; set; }
+
+
     }
 }

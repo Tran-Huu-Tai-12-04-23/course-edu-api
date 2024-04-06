@@ -277,3 +277,6 @@ C:\Users\huuta\OneDrive\Máy tính\course-edu-api\bin\Debug\net8.0\Newtonsoft.Js
 C:\Users\huuta\OneDrive\Máy tính\course-edu-api\bin\Debug\net8.0\OAuth2.dll
 C:\Users\huuta\OneDrive\Máy tính\course-edu-api\bin\Debug\net8.0\RestSharp.dll
 C:\Users\huuta\OneDrive\Máy tính\course-edu-api\obj\Debug\net8.0\course-e.62E09726.Up2Date
+C:\Users\huuta\OneDrive\Máy tính\course-edu-api\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+C:\Users\huuta\OneDrive\Máy tính\course-edu-api\bin\Debug\net8.0\MailKit.dll
+C:\Users\huuta\OneDrive\Máy tính\course-edu-api\bin\Debug\net8.0\MimeKit.dll

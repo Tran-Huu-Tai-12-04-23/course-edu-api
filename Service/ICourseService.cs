@@ -14,6 +14,16 @@ public interface ICourseService
     Task<bool> DeleteCourse(long id);
     Task<long> CountTotalCourse(CourseQueryDto courseQueryDto);
     Task<GroupLesson> AddGroupLesson(long courseId, GroupLesson groupLesson);
-    Task<GroupLesson> UpdateGroupLesson(long groupLessonId, GroupLesson updateGroupLesson);
+    Task<GroupLesson> UpdateGroupLesson( long courseId, GroupLesson updateGroupLesson);
     Task<bool> RemoveGroupLesson(long groupLessonId);
+    Task<Lesson> AddNewLesson(long groupLessonId,long courseId, Lesson newLesson);
+    Task<Lesson> UpdateLesson(long lessonId, Lesson updateLesson);
+    Task<bool> RemoveLesson(long lessonId);
+    Task<UserCourse> RegisterCourse(RegisterCourseRequestDto registerCourseRequestDto);
+    Task<UserCourse> PaymentCourse(RegisterCourseRequestDto registerCourseRequestDto);
+    Task<bool> CheckUserCourseExist(long userId, long courseId);
+    Task<UserCourse> GetUserCourse(long userId, long courseId);
+
+    Task<UserCourse> ChangeCurrentProcessCourse(
+        ChangeCurrentProcessCourseRequestDto changeCurrentProcessCourseRequestDto);
 }
