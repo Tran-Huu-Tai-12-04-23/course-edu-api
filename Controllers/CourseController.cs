@@ -302,11 +302,26 @@ namespace course_edu_api.Controllers
             }
         }
         [HttpPost("change-current-process-learning")]
-        public async Task<IActionResult> ChangeCurrentProcessCourse([FromBody] ChangeCurrentProcessCourseRequestDto changeCurrentProcessCourseRequestDto)
+        public async Task<IActionResult> ChangeCurrentProcessCourse([FromBody] ChangeCurrentLessonRequestDto changeCurrentLessonRequestDto)
         {
             try
             {
-                var res = await _courseService.ChangeCurrentProcessCourse(changeCurrentProcessCourseRequestDto);
+                var res = await _courseService.ChangeCurrentLesson(changeCurrentLessonRequestDto);
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest(e.Message);
+            }
+        }
+        
+        [HttpGet("get-user-course-by-user/{userId}")]
+        public async Task<IActionResult> GetUserCourseByUser([FromRoute] long userId)
+        {
+            try
+            {
+                var res = await _courseService.GetUserCourseByUser(userId);
                 return Ok(res);
             }
             catch (Exception e)

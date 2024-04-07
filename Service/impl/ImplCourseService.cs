@@ -340,6 +340,7 @@ public class ImplCourseService : ICourseService
     {
         var userCourse =
             await _context.UserCourse
+                .Include(u => u.LessonPassed)
                 .Include(u => u.CurrentLesson)
                 .ThenInclude(uc => uc.Quiz)
                 .Include(uc => uc.CurrentLesson)
@@ -354,7 +355,7 @@ public class ImplCourseService : ICourseService
         return userCourse;
     }
     
-    public async Task<UserCourse> ChangeCurrentProcessCourse(ChangeCurrentProcessCourseRequestDto changeCurrentProcessCourseRequestDto)
+    public async Task<UserCourse> ChangeCurrentLesson(ChangeCurrentLessonRequestDto changeCurrentLessonRequestDto)
     {
         var userCourseExist = await _context.UserCourse
             .Include(uc => uc.CurrentLesson)
@@ -365,24 +366,32 @@ public class ImplCourseService : ICourseService
             .Include(uc => uc.CurrentLesson)
             .ThenInclude(uc => uc.Quiz)
             .Include(uc => uc.LessonPassed)
-            .FirstOrDefaultAsync(uc => uc.Course.Id == changeCurrentProcessCourseRequestDto.CourseId);
+            .FirstOrDefaultAsync(uc => uc.Course.Id == changeCurrentLessonRequestDto.CourseId);
 
         if (userCourseExist == null)
         {
             throw new ApplicationException("Course not found"); // Use a more specific exception type
         }
+        
 
         var lessonExist = await _context.Lessons.Include(uc => uc.Post)
             .ThenInclude(ucc => ucc.items)
             .Include(uc => uc.Video)
             .Include(uc => uc.Quiz)
-            .FirstOrDefaultAsync(uc => uc.Id == changeCurrentProcessCourseRequestDto.LessonId);
+            .FirstOrDefaultAsync(uc => uc.Id == changeCurrentLessonRequestDto.LessonId);
 
         if (lessonExist == null )
         {
             throw new ApplicationException("Lesson or group lesson not found"); // Same exception type for consistency
         }
 
+        // add process for learning
+        var isLessonPassedExist = userCourseExist.LessonPassed.Contains(lessonExist);
+        if (!isLessonPassedExist)
+        {
+            userCourseExist.LessonPassed.Add(lessonExist);
+            await _context.SaveChangesAsync();
+        }
         // Update userCourseExist with retrieved entities
         userCourseExist.CurrentLesson = lessonExist;
 
@@ -396,4 +405,13 @@ public class ImplCourseService : ICourseService
         return userCourseExist;
     }
 
+    public async Task<List<UserCourse>> GetUserCourseByUser(long userId)
+    {
+        return  await _context.UserCourse
+            .Include(uc => uc.Course)
+            .ThenInclude(ucc => ucc.GroupLessons)
+            .ThenInclude(uccc => uccc.Lessons)
+            .Include(uc => uc.LessonPassed)
+            .Where(uc => uc.User.Id == userId).ToListAsync();
+    }
 }

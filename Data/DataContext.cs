@@ -203,7 +203,9 @@ namespace course_edu_api.Data
         public DbSet<VideoLesson?> VideoLesson { get; set; }
         public DbSet<PostLesson?> PostLesson { get; set; }
         public DbSet<UserCourse?> UserCourse { get; set; }
-        public DbSet<PaymentHistory?> PaymentHistorie { get; set; }
+        public DbSet<PaymentHistory?> PaymentHistories { get; set; }
+        public DbSet<Comment?> Comments { get; set; }
+        public DbSet<Rating?> Ratings { get; set; }
 
 
     }

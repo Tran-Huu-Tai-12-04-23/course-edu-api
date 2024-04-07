@@ -57,32 +57,19 @@ namespace course_edu_api.Controllers
             return Ok(posts);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(long id)
-        {
-            var post = await this._postService.GetPostById(id);
-
-            if (post == null)
-            {
-                return NotFound("Post not found!");
-            }
-
-            return Ok(post);
-        }
-
         /*[Authorize]*/
         [HttpPost]
         public async Task<ActionResult<Post>> CreatePost(PostRequest post)
         {
             Console.Write(post.Title);
-            post.StatePost = PostStatus.Pending.ToString();
+            post.StatePost = PostStatus.WAIT_APPROVE.ToString();
             User user = await _userService.GetUserById(post.UserId);
             var newSubItemPosts = await _subItemPostService.CreateSubItemPosts(post.Items!);
 
             Post newPost = new Post
             {
                 User = user,
-                Status = PostStatus.Pending,
+                Status = PostStatus.WAIT_APPROVE,
                 Description = post.Description,
                 Tags = post.Tags,
                 Thumbnail = post.Thumbnail,
@@ -132,7 +119,42 @@ namespace course_edu_api.Controllers
 
             return Ok(isOk);
         }
-
+        
+        [HttpGet("approve")]
+        public async Task<IActionResult> GetAllPostApprove()
+        {
+            var post = await this._postService.GetPostApproved();
+            return Ok(post);
+        }
+        
+        [HttpPut("approve-post/{postId}")]
+        public async Task<IActionResult> ApprovePost([FromRoute]long postId)
+        {
+            var post = await this._postService.ApprovePost(postId);
+            return Ok(post);
+        }
+        
+        [HttpPut("reject-post/{postId}")]
+        public async Task<IActionResult> RejectPost([FromRoute]long postId)
+        {
+            var post = await this._postService.RejectPost(postId);
+            return Ok(post);
+        }
+        
+        [HttpGet("{postId}")]
+        public async Task<IActionResult> GetDetailPost([FromRoute]long postId)
+        {
+            try
+            {
+                var post = await this._postService.GetPostById(postId);
+                return Ok(post);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
        
     }
 }

@@ -123,4 +123,37 @@ public class ImplPostService : IPostService
         }
         return await query.CountAsync();
     }
+
+    public async Task<List<Post>> GetPostApproved()
+    {
+        return await _context.Posts
+            .Include(post => post.User)
+            .Where(post => post.IsApproved == true).ToListAsync();
+    }
+
+    public async Task<Post> ApprovePost(long postId)
+    {
+        var postExist = await _context.Posts.FindAsync(postId);
+        if (postExist == null) throw new Exception("Bài viết không tồn tại!");
+
+        postExist.IsApproved = true;
+        postExist.Status = PostStatus.Published;
+        postExist.ApproveDate = new DateTime();
+        await _context.SaveChangesAsync();
+
+        return postExist;
+    }
+
+    public async Task<Post> RejectPost(long postId)
+    {
+        var postExist = await _context.Posts.FindAsync(postId);
+        if (postExist == null) throw new Exception("Bài viết không tồn tại!");
+
+        postExist.IsApproved = false;
+        postExist.Status = PostStatus.REJECT;
+        postExist.ApproveDate = new DateTime();
+        await _context.SaveChangesAsync();
+
+        return postExist;
+    }
 }

@@ -17,7 +17,7 @@ namespace course_edu_api.Entities
             User = user;
             Tags = tags;
             IsPin = false;
-            isApproved = false;
+            IsApproved = false;
         }
 
         public long Id { get; set; }
@@ -27,10 +27,14 @@ namespace course_edu_api.Entities
         public PostStatus Status { get; set; }
         public string? Thumbnail { get; set; }
         public bool IsPin { get; set; } = false;
-        public bool isApproved { get; set; } = false;
+        public bool IsApproved { get; set; } = false;
+        public DateTime createAt { get; set; } = new DateTime();
+        public DateTime ApproveDate{ get; set; } =  new DateTime();
         public User User { get; set; }
         
         public List<SubItemPost>? Items { get; set; }
+        public List<Comment>? Comments { get; set; }
+        public List<Rating>? Ratings { get; set; }
         
     }
 }

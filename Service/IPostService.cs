@@ -14,5 +14,8 @@ public interface IPostService
     Task<Post> AddSubItemToPost(long postId, SubItemPost subItem);
     Task<PaginatedResponse<Post>> GetPostPagination(PaginationRequestDto<PostQueryDto> paginationRequestDto);
     Task<long> GetTotalPost(PostQueryDto postQueryDto);
+    Task<List<Post>> GetPostApproved();
+    Task<Post> ApprovePost(long postId);
+    Task<Post> RejectPost(long postId);
 
 }

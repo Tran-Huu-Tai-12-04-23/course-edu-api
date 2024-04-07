@@ -45,22 +45,6 @@ namespace course_edu_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "NoteLessons",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeSecond = table.Column<long>(type: "bigint", nullable: false),
-                    LessonId = table.Column<long>(type: "bigint", nullable: false),
-                    UserId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NoteLessons", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PostLesson",
                 columns: table => new
                 {
@@ -182,7 +166,7 @@ namespace course_edu_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentHistorie",
+                name: "PaymentHistories",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -195,9 +179,9 @@ namespace course_edu_api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentHistorie", x => x.Id);
+                    table.PrimaryKey("PK_PaymentHistories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaymentHistorie_Users_UserId",
+                        name: "FK_PaymentHistories_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -216,7 +200,9 @@ namespace course_edu_api.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     Thumbnail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsPin = table.Column<bool>(type: "bit", nullable: false),
-                    isApproved = table.Column<bool>(type: "bit", nullable: false),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
+                    createAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ApproveDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -228,6 +214,47 @@ namespace course_edu_api.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CommentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PostId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ratings",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Star = table.Column<int>(type: "int", nullable: false),
+                    PostId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ratings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ratings_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -330,7 +357,6 @@ namespace course_edu_api.Migrations
                     RegisterAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsPayment = table.Column<bool>(type: "bit", nullable: false),
                     PaymentHistoryId = table.Column<long>(type: "bigint", nullable: true),
-                    CurrentGroupLessonId = table.Column<long>(type: "bigint", nullable: true),
                     CurrentLessonId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
@@ -343,19 +369,14 @@ namespace course_edu_api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserCourse_GroupLessons_CurrentGroupLessonId",
-                        column: x => x.CurrentGroupLessonId,
-                        principalTable: "GroupLessons",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_UserCourse_Lessons_CurrentLessonId",
                         column: x => x.CurrentLessonId,
                         principalTable: "Lessons",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_UserCourse_PaymentHistorie_PaymentHistoryId",
+                        name: "FK_UserCourse_PaymentHistories_PaymentHistoryId",
                         column: x => x.PaymentHistoryId,
-                        principalTable: "PaymentHistorie",
+                        principalTable: "PaymentHistories",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserCourse_Users_UserId",
@@ -364,6 +385,33 @@ namespace course_edu_api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "NoteLessons",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LessonId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    NoteAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserCourseId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NoteLessons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NoteLessons_UserCourse_UserCourseId",
+                        column: x => x.UserCourseId,
+                        principalTable: "UserCourse",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_PostId",
+                table: "Comments",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_CategoryCourseId",
@@ -396,8 +444,13 @@ namespace course_edu_api.Migrations
                 column: "VideoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentHistorie_UserId",
-                table: "PaymentHistorie",
+                name: "IX_NoteLessons_UserCourseId",
+                table: "NoteLessons",
+                column: "UserCourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentHistories_UserId",
+                table: "PaymentHistories",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -409,6 +462,11 @@ namespace course_edu_api.Migrations
                 name: "IX_Question_LessonId",
                 table: "Question",
                 column: "LessonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ratings_PostId",
+                table: "Ratings",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubItemPosts_PostId",
@@ -424,11 +482,6 @@ namespace course_edu_api.Migrations
                 name: "IX_UserCourse_CourseId",
                 table: "UserCourse",
                 column: "CourseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserCourse_CurrentGroupLessonId",
-                table: "UserCourse",
-                column: "CurrentGroupLessonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserCourse_CurrentLessonId",
@@ -478,10 +531,6 @@ namespace course_edu_api.Migrations
                 table: "Lessons");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_UserCourse_GroupLessons_CurrentGroupLessonId",
-                table: "UserCourse");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_Lessons_PostLesson_PostId",
                 table: "Lessons");
 
@@ -493,10 +542,16 @@ namespace course_edu_api.Migrations
                 name: "Banners");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
                 name: "NoteLessons");
 
             migrationBuilder.DropTable(
                 name: "Question");
+
+            migrationBuilder.DropTable(
+                name: "Ratings");
 
             migrationBuilder.DropTable(
                 name: "SubItemPosts");
@@ -523,7 +578,7 @@ namespace course_edu_api.Migrations
                 name: "Lessons");
 
             migrationBuilder.DropTable(
-                name: "PaymentHistorie");
+                name: "PaymentHistories");
 
             migrationBuilder.DropTable(
                 name: "VideoLesson");

@@ -2,7 +2,7 @@
 
 public enum PostStatus
 {
-    Pending,
+    WAIT_APPROVE,
     Published,
-    UnPublished,
+    REJECT
 }

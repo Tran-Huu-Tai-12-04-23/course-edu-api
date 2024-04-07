@@ -2,7 +2,7 @@
 
 namespace course_edu_api.Data.RequestModels;
 
-public class ChangeCurrentProcessCourseRequestDto
+public class ChangeCurrentLessonRequestDto
 {
     [Required]
     public long CourseId { get; set; }

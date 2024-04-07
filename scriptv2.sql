@@ -32,16 +32,6 @@ CREATE TABLE [CategoriesCourse] (
 );
 GO
 
-CREATE TABLE [NoteLessons] (
-    [Id] bigint NOT NULL IDENTITY,
-    [Content] nvarchar(max) NOT NULL,
-    [TimeSecond] bigint NOT NULL,
-    [LessonId] bigint NOT NULL,
-    [UserId] bigint NOT NULL,
-    CONSTRAINT [PK_NoteLessons] PRIMARY KEY ([Id])
-);
-GO
-
 CREATE TABLE [PostLesson] (
     [Id] bigint NOT NULL IDENTITY,
     CONSTRAINT [PK_PostLesson] PRIMARY KEY ([Id])
@@ -114,15 +104,15 @@ CREATE TABLE [GroupLessons] (
 );
 GO
 
-CREATE TABLE [PaymentHistorie] (
+CREATE TABLE [PaymentHistories] (
     [Id] bigint NOT NULL IDENTITY,
     [UserId] bigint NOT NULL,
     [PaymentType] int NOT NULL,
     [PaymentAt] datetime2 NOT NULL,
     [Amount] float NULL,
     [IsPayment] bit NOT NULL,
-    CONSTRAINT [PK_PaymentHistorie] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_PaymentHistorie_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+    CONSTRAINT [PK_PaymentHistories] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_PaymentHistories_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
 );
 GO
 
@@ -134,10 +124,33 @@ CREATE TABLE [Posts] (
     [Status] int NOT NULL,
     [Thumbnail] nvarchar(max) NULL,
     [IsPin] bit NOT NULL,
-    [isApproved] bit NOT NULL,
+    [IsApproved] bit NOT NULL,
+    [createAt] datetime2 NOT NULL,
+    [ApproveDate] datetime2 NOT NULL,
     [UserId] bigint NOT NULL,
     CONSTRAINT [PK_Posts] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_Posts_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+GO
+
+CREATE TABLE [Comments] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Content] nvarchar(max) NOT NULL,
+    [CommentAt] datetime2 NOT NULL,
+    [PostId] bigint NULL,
+    CONSTRAINT [PK_Comments] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Comments_Posts_PostId] FOREIGN KEY ([PostId]) REFERENCES [Posts] ([Id])
+);
+GO
+
+CREATE TABLE [Ratings] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Content] nvarchar(max) NOT NULL,
+    [RateAt] datetime2 NOT NULL,
+    [Star] int NOT NULL,
+    [PostId] bigint NULL,
+    CONSTRAINT [PK_Ratings] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Ratings_Posts_PostId] FOREIGN KEY ([PostId]) REFERENCES [Posts] ([Id])
 );
 GO
 
@@ -157,33 +170,6 @@ CREATE TABLE [SubItemPosts] (
 );
 GO
 
-CREATE TABLE [CourseLearningProcesses] (
-    [Id] bigint NOT NULL IDENTITY,
-    [CurrentGroupLessonId] bigint NULL,
-    [CurrentLessonId] bigint NULL,
-    [CourseId] bigint NOT NULL,
-    CONSTRAINT [PK_CourseLearningProcesses] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_CourseLearningProcesses_Courses_CourseId] FOREIGN KEY ([CourseId]) REFERENCES [Courses] ([Id]) ON DELETE CASCADE,
-    CONSTRAINT [FK_CourseLearningProcesses_GroupLessons_CurrentGroupLessonId] FOREIGN KEY ([CurrentGroupLessonId]) REFERENCES [GroupLessons] ([Id])
-);
-GO
-
-CREATE TABLE [UserCourse] (
-    [Id] bigint NOT NULL IDENTITY,
-    [UserId] bigint NOT NULL,
-    [CourseId] bigint NOT NULL,
-    [RegisterAt] datetime2 NOT NULL,
-    [IsPayment] bit NOT NULL,
-    [PaymentHistoryId] bigint NULL,
-    [CourseLearningProcessId] bigint NULL,
-    CONSTRAINT [PK_UserCourse] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_UserCourse_CourseLearningProcesses_CourseLearningProcessId] FOREIGN KEY ([CourseLearningProcessId]) REFERENCES [CourseLearningProcesses] ([Id]),
-    CONSTRAINT [FK_UserCourse_Courses_CourseId] FOREIGN KEY ([CourseId]) REFERENCES [Courses] ([Id]) ON DELETE CASCADE,
-    CONSTRAINT [FK_UserCourse_PaymentHistorie_PaymentHistoryId] FOREIGN KEY ([PaymentHistoryId]) REFERENCES [PaymentHistorie] ([Id]),
-    CONSTRAINT [FK_UserCourse_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
-);
-GO
-
 CREATE TABLE [Lessons] (
     [Id] bigint NOT NULL IDENTITY,
     [Type] int NOT NULL,
@@ -197,7 +183,6 @@ CREATE TABLE [Lessons] (
     CONSTRAINT [PK_Lessons] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_Lessons_GroupLessons_GroupLessonId] FOREIGN KEY ([GroupLessonId]) REFERENCES [GroupLessons] ([Id]),
     CONSTRAINT [FK_Lessons_PostLesson_PostId] FOREIGN KEY ([PostId]) REFERENCES [PostLesson] ([Id]),
-    CONSTRAINT [FK_Lessons_UserCourse_UserCourseId] FOREIGN KEY ([UserCourseId]) REFERENCES [UserCourse] ([Id]),
     CONSTRAINT [FK_Lessons_VideoLesson_VideoId] FOREIGN KEY ([VideoId]) REFERENCES [VideoLesson] ([Id])
 );
 GO
@@ -216,13 +201,35 @@ CREATE TABLE [Question] (
 );
 GO
 
-CREATE INDEX [IX_CourseLearningProcesses_CourseId] ON [CourseLearningProcesses] ([CourseId]);
+CREATE TABLE [UserCourse] (
+    [Id] bigint NOT NULL IDENTITY,
+    [UserId] bigint NOT NULL,
+    [CourseId] bigint NOT NULL,
+    [RegisterAt] datetime2 NOT NULL,
+    [IsPayment] bit NOT NULL,
+    [PaymentHistoryId] bigint NULL,
+    [CurrentLessonId] bigint NULL,
+    CONSTRAINT [PK_UserCourse] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_UserCourse_Courses_CourseId] FOREIGN KEY ([CourseId]) REFERENCES [Courses] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_UserCourse_Lessons_CurrentLessonId] FOREIGN KEY ([CurrentLessonId]) REFERENCES [Lessons] ([Id]),
+    CONSTRAINT [FK_UserCourse_PaymentHistories_PaymentHistoryId] FOREIGN KEY ([PaymentHistoryId]) REFERENCES [PaymentHistories] ([Id]),
+    CONSTRAINT [FK_UserCourse_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
 GO
 
-CREATE INDEX [IX_CourseLearningProcesses_CurrentGroupLessonId] ON [CourseLearningProcesses] ([CurrentGroupLessonId]);
+CREATE TABLE [NoteLessons] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Content] nvarchar(max) NOT NULL,
+    [LessonId] bigint NOT NULL,
+    [UserId] bigint NOT NULL,
+    [NoteAt] datetime2 NOT NULL,
+    [UserCourseId] bigint NULL,
+    CONSTRAINT [PK_NoteLessons] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_NoteLessons_UserCourse_UserCourseId] FOREIGN KEY ([UserCourseId]) REFERENCES [UserCourse] ([Id])
+);
 GO
 
-CREATE INDEX [IX_CourseLearningProcesses_CurrentLessonId] ON [CourseLearningProcesses] ([CurrentLessonId]);
+CREATE INDEX [IX_Comments_PostId] ON [Comments] ([PostId]);
 GO
 
 CREATE INDEX [IX_Courses_CategoryCourseId] ON [Courses] ([CategoryCourseId]);
@@ -243,13 +250,19 @@ GO
 CREATE INDEX [IX_Lessons_VideoId] ON [Lessons] ([VideoId]);
 GO
 
-CREATE INDEX [IX_PaymentHistorie_UserId] ON [PaymentHistorie] ([UserId]);
+CREATE INDEX [IX_NoteLessons_UserCourseId] ON [NoteLessons] ([UserCourseId]);
+GO
+
+CREATE INDEX [IX_PaymentHistories_UserId] ON [PaymentHistories] ([UserId]);
 GO
 
 CREATE INDEX [IX_Posts_UserId] ON [Posts] ([UserId]);
 GO
 
 CREATE INDEX [IX_Question_LessonId] ON [Question] ([LessonId]);
+GO
+
+CREATE INDEX [IX_Ratings_PostId] ON [Ratings] ([PostId]);
 GO
 
 CREATE INDEX [IX_SubItemPosts_PostId] ON [SubItemPosts] ([PostId]);
@@ -261,7 +274,7 @@ GO
 CREATE INDEX [IX_UserCourse_CourseId] ON [UserCourse] ([CourseId]);
 GO
 
-CREATE INDEX [IX_UserCourse_CourseLearningProcessId] ON [UserCourse] ([CourseLearningProcessId]);
+CREATE INDEX [IX_UserCourse_CurrentLessonId] ON [UserCourse] ([CurrentLessonId]);
 GO
 
 CREATE INDEX [IX_UserCourse_PaymentHistoryId] ON [UserCourse] ([PaymentHistoryId]);
@@ -273,11 +286,21 @@ GO
 CREATE INDEX [IX_Users_UserSettingId] ON [Users] ([UserSettingId]);
 GO
 
-ALTER TABLE [CourseLearningProcesses] ADD CONSTRAINT [FK_CourseLearningProcesses_Lessons_CurrentLessonId] FOREIGN KEY ([CurrentLessonId]) REFERENCES [Lessons] ([Id]);
+ALTER TABLE [Lessons] ADD CONSTRAINT [FK_Lessons_UserCourse_UserCourseId] FOREIGN KEY ([UserCourseId]) REFERENCES [UserCourse] ([Id]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20240405055805_Initial', N'8.0.2');
+VALUES (N'20240407155545_Initial', N'8.0.2');
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20240407161238_final', N'8.0.2');
 GO
 
 COMMIT;

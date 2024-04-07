@@ -24,6 +24,8 @@ public interface ICourseService
     Task<bool> CheckUserCourseExist(long userId, long courseId);
     Task<UserCourse> GetUserCourse(long userId, long courseId);
 
-    Task<UserCourse> ChangeCurrentProcessCourse(
-        ChangeCurrentProcessCourseRequestDto changeCurrentProcessCourseRequestDto);
+    Task<UserCourse> ChangeCurrentLesson(
+        ChangeCurrentLessonRequestDto changeCurrentLessonRequestDto);
+
+    Task<List<UserCourse>> GetUserCourseByUser(long userId);
 }

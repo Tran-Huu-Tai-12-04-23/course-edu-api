@@ -36,7 +36,7 @@ public class ImplPaymentService : IPaymentService
         paymentHis.User = userExist;
         userCourseExist.PaymentHistory = paymentHis;
         paymentHis.Amount = userCourseExist.Course.Price;
-         _context.PaymentHistorie.Add(paymentHis);
+         _context.PaymentHistories.Add(paymentHis);
          await _context.SaveChangesAsync();
          return paymentHis;
     }
@@ -45,7 +45,7 @@ public class ImplPaymentService : IPaymentService
     {
         try
         {
-            var paymentHistory = await _context.PaymentHistorie.FindAsync(paymentHistoryId);
+            var paymentHistory = await _context.PaymentHistories.FindAsync(paymentHistoryId);
             paymentHistory.IsPayment = true;
             paymentHistory.PaymentAt = new DateTime();
             await _context.SaveChangesAsync();

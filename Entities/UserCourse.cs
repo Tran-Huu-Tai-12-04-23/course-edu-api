@@ -12,6 +12,7 @@ public class UserCourse
     public DateTime RegisterAt { get; set; } = new DateTime();
     public bool IsPayment { get; set; }
     public List<Lesson> LessonPassed { get; set; } = new List<Lesson>();
+    public List<NoteLesson>? Notes { get; set; } = new List<NoteLesson>();
     public PaymentHistory? PaymentHistory { get; set; }
     public Lesson? CurrentLesson { get; set; }
     
