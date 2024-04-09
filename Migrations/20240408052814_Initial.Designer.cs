@@ -12,7 +12,7 @@ using course_edu_api.Data;
 namespace course_edu_api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240407155545_Initial")]
+    [Migration("20240408052814_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -405,7 +405,7 @@ namespace course_edu_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("PostId")
+                    b.Property<long?>("CourseId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("RateAt")
@@ -416,7 +416,7 @@ namespace course_edu_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("CourseId");
 
                     b.ToTable("Ratings");
                 });
@@ -698,9 +698,9 @@ namespace course_edu_api.Migrations
 
             modelBuilder.Entity("course_edu_api.Entities.Rating", b =>
                 {
-                    b.HasOne("course_edu_api.Entities.Post", null)
+                    b.HasOne("course_edu_api.Entities.Course", null)
                         .WithMany("Ratings")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("CourseId");
                 });
 
             modelBuilder.Entity("course_edu_api.Entities.SubItemPost", b =>
@@ -757,6 +757,8 @@ namespace course_edu_api.Migrations
             modelBuilder.Entity("course_edu_api.Entities.Course", b =>
                 {
                     b.Navigation("GroupLessons");
+
+                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("course_edu_api.Entities.GroupLesson", b =>
@@ -774,8 +776,6 @@ namespace course_edu_api.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Items");
-
-                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("course_edu_api.Entities.PostLesson", b =>

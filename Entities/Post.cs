@@ -34,7 +34,6 @@ namespace course_edu_api.Entities
         
         public List<SubItemPost>? Items { get; set; }
         public List<Comment>? Comments { get; set; }
-        public List<Rating>? Ratings { get; set; }
         
     }
 }

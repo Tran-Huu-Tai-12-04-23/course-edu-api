@@ -16,4 +16,7 @@ public class UserCourse
     public PaymentHistory? PaymentHistory { get; set; }
     public Lesson? CurrentLesson { get; set; }
     
+    public Lesson? NextLesson { get; set; }
+    public Lesson? PrevLesson { get; set; }
+    
 }

@@ -104,6 +104,17 @@ CREATE TABLE [GroupLessons] (
 );
 GO
 
+CREATE TABLE [Ratings] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Content] nvarchar(max) NOT NULL,
+    [RateAt] datetime2 NOT NULL,
+    [Star] int NOT NULL,
+    [CourseId] bigint NULL,
+    CONSTRAINT [PK_Ratings] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Ratings_Courses_CourseId] FOREIGN KEY ([CourseId]) REFERENCES [Courses] ([Id])
+);
+GO
+
 CREATE TABLE [PaymentHistories] (
     [Id] bigint NOT NULL IDENTITY,
     [UserId] bigint NOT NULL,
@@ -140,17 +151,6 @@ CREATE TABLE [Comments] (
     [PostId] bigint NULL,
     CONSTRAINT [PK_Comments] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_Comments_Posts_PostId] FOREIGN KEY ([PostId]) REFERENCES [Posts] ([Id])
-);
-GO
-
-CREATE TABLE [Ratings] (
-    [Id] bigint NOT NULL IDENTITY,
-    [Content] nvarchar(max) NOT NULL,
-    [RateAt] datetime2 NOT NULL,
-    [Star] int NOT NULL,
-    [PostId] bigint NULL,
-    CONSTRAINT [PK_Ratings] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_Ratings_Posts_PostId] FOREIGN KEY ([PostId]) REFERENCES [Posts] ([Id])
 );
 GO
 
@@ -262,7 +262,7 @@ GO
 CREATE INDEX [IX_Question_LessonId] ON [Question] ([LessonId]);
 GO
 
-CREATE INDEX [IX_Ratings_PostId] ON [Ratings] ([PostId]);
+CREATE INDEX [IX_Ratings_CourseId] ON [Ratings] ([CourseId]);
 GO
 
 CREATE INDEX [IX_SubItemPosts_PostId] ON [SubItemPosts] ([PostId]);
@@ -290,17 +290,7 @@ ALTER TABLE [Lessons] ADD CONSTRAINT [FK_Lessons_UserCourse_UserCourseId] FOREIG
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20240407155545_Initial', N'8.0.2');
-GO
-
-COMMIT;
-GO
-
-BEGIN TRANSACTION;
-GO
-
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20240407161238_final', N'8.0.2');
+VALUES (N'20240408052814_Initial', N'8.0.2');
 GO
 
 COMMIT;

@@ -182,7 +182,7 @@ namespace course_edu_api.Controllers
                 var vnp_Version = "2.1.0";
                 var vnp_Command = "pay";
                 var orderType = "other";
-                var amountInVnd = (long)coursePayment.Price * 100000;
+                var amountInVnd = (long)coursePayment.Price * 100;
                 var vnp_TxnRef = ConfigVnPay.GetRandomNumber(8);
                 var vnp_TmnCode = ConfigVnPay.vnp_TmnCode;
 

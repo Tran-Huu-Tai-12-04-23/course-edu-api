@@ -68,6 +68,7 @@ builder.Services.AddScoped<IUserSettingService, ImplUserSettingService>();
 builder.Services.AddScoped<IEmailService, ImplEmailService>();
 builder.Services.AddScoped<IAuthService, ImplAuthService>();
 builder.Services.AddScoped<IPaymentService, ImplPaymentService>();
+builder.Services.AddScoped<ICommentService, ImplCommentService>();
 
 var app = builder.Build();
 app.UseCors();

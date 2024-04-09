@@ -18,15 +18,18 @@ namespace course_edu_api.Controllers
         private readonly IPostService _postService;
         private readonly ISubItemPostService _subItemPostService;
         private readonly IUserService _userService;
+        private readonly ICommentService _commentService;
 
         public PostController(IPostService postService, 
             ISubItemPostService subItemPostService,
-                IUserService userService
+            IUserService userService,
+            ICommentService commentService
             )
         {
             _postService = postService;
             _subItemPostService = subItemPostService;
             _userService =userService;
+            _commentService = commentService;
         }
 
         [HttpGet]
@@ -112,6 +115,7 @@ namespace course_edu_api.Controllers
 
             if (post == null)
             {
+                
                 return Ok(false);
             }
 
@@ -155,6 +159,66 @@ namespace course_edu_api.Controllers
                 throw;
             }
         }
-       
+        
+        [HttpPost("comment/{postId}")]
+        public async Task<IActionResult> AddComment([FromRoute] long postId, [FromBody]Comment comment)
+        {
+            try
+            {
+                var post = await this._commentService.CreateComment(postId, comment);
+                return Ok(post);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        
+        [HttpPut("update-comment")]
+        public async Task<IActionResult> UpdateComment([FromBody]Comment comment)
+        {
+            try
+            {
+                var post = await this._commentService.UpdateComment(comment);
+                return Ok(post);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        
+        [HttpDelete("remove-comment/{commentId}")]
+        public async Task<IActionResult> RemoveComment([FromRoute]long commentId)
+        {
+            try
+            {
+                var post = await this._commentService.RemoveComment(commentId);
+                return Ok(post);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        
+        [HttpGet("comment/{postId}")]
+        public async Task<IActionResult> GetAllCommentPost([FromRoute]long postId)
+        {
+            try
+            {
+                var post = await this._commentService.GetAllCommentByPostId(postId);
+                return Ok(post);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }

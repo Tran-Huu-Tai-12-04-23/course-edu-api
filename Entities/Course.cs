@@ -56,5 +56,6 @@ namespace course_edu_api.Entities
         public CourseStatus Status { get; set; } = CourseStatus.ComingSoon;
         public CategoryCourse CategoryCourse { get; set; }
         public List<GroupLesson>? GroupLessons { get; set; }
+        public List<Rating>? Ratings { get; set; }
     }
 }

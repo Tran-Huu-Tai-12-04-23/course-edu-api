@@ -12,7 +12,7 @@ using course_edu_api.Data;
 namespace course_edu_api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240407161238_final")]
+    [Migration("20240409064026_final")]
     partial class final
     {
         /// <inheritdoc />
@@ -405,7 +405,7 @@ namespace course_edu_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("PostId")
+                    b.Property<long?>("CourseId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("RateAt")
@@ -416,7 +416,7 @@ namespace course_edu_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("CourseId");
 
                     b.ToTable("Ratings");
                 });
@@ -533,7 +533,13 @@ namespace course_edu_api.Migrations
                     b.Property<bool>("IsPayment")
                         .HasColumnType("bit");
 
+                    b.Property<long?>("NextLessonId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("PaymentHistoryId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("PrevLessonId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("RegisterAt")
@@ -548,7 +554,11 @@ namespace course_edu_api.Migrations
 
                     b.HasIndex("CurrentLessonId");
 
+                    b.HasIndex("NextLessonId");
+
                     b.HasIndex("PaymentHistoryId");
+
+                    b.HasIndex("PrevLessonId");
 
                     b.HasIndex("UserId");
 
@@ -698,9 +708,9 @@ namespace course_edu_api.Migrations
 
             modelBuilder.Entity("course_edu_api.Entities.Rating", b =>
                 {
-                    b.HasOne("course_edu_api.Entities.Post", null)
+                    b.HasOne("course_edu_api.Entities.Course", null)
                         .WithMany("Ratings")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("CourseId");
                 });
 
             modelBuilder.Entity("course_edu_api.Entities.SubItemPost", b =>
@@ -735,9 +745,17 @@ namespace course_edu_api.Migrations
                         .WithMany()
                         .HasForeignKey("CurrentLessonId");
 
+                    b.HasOne("course_edu_api.Entities.Lesson", "NextLesson")
+                        .WithMany()
+                        .HasForeignKey("NextLessonId");
+
                     b.HasOne("course_edu_api.Entities.PaymentHistory", "PaymentHistory")
                         .WithMany()
                         .HasForeignKey("PaymentHistoryId");
+
+                    b.HasOne("course_edu_api.Entities.Lesson", "PrevLesson")
+                        .WithMany()
+                        .HasForeignKey("PrevLessonId");
 
                     b.HasOne("course_edu_api.Entities.User", "User")
                         .WithMany()
@@ -749,7 +767,11 @@ namespace course_edu_api.Migrations
 
                     b.Navigation("CurrentLesson");
 
+                    b.Navigation("NextLesson");
+
                     b.Navigation("PaymentHistory");
+
+                    b.Navigation("PrevLesson");
 
                     b.Navigation("User");
                 });
@@ -757,6 +779,8 @@ namespace course_edu_api.Migrations
             modelBuilder.Entity("course_edu_api.Entities.Course", b =>
                 {
                     b.Navigation("GroupLessons");
+
+                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("course_edu_api.Entities.GroupLesson", b =>
@@ -774,8 +798,6 @@ namespace course_edu_api.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Items");
-
-                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("course_edu_api.Entities.PostLesson", b =>
