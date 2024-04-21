@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Azure;
+using course_edu_api.Data.RequestModels;
 using course_edu_api.Data.ResponseModels;
 using course_edu_api.Helper;
 using course_edu_api.Service;
@@ -99,6 +100,27 @@ namespace course_edu_api.Controllers
 
             var updatedUserSetting = await _userSettingService.UpdateUserSetting(id, userSetting);
             return Ok(updatedUserSetting);
+        }
+        
+        [HttpPost("pagination")]
+        public async Task<ActionResult> GetPostPagination(PaginationRequestDto<UserQueryDto> paginationRequestDto)
+        {
+            try
+            {
+                var users = await this._userService.GetUserPagination(paginationRequestDto);
+                return Ok(users);
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err);
+            }
+        }
+        
+        [HttpPost("count")]
+        public async Task<ActionResult> CountTotalUserByQuery(UserQueryDto userQueryDto)
+        {
+            var total = await this._userService.GetTotalUserByQuery(userQueryDto);
+            return Ok(total);
         }
 
     }

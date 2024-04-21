@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2bAGADw9pbYWlYGLzLhWgY8U4mH43OX8onKoYF1UnCnmWocI7QxeUqBHnPrYtKZQim8vHsZZs/2+AkOsDyb+cQ==",
+  "dgSpecHash": "hTdlV9aPs39O4BctZopkg7DotrLouqS6Gh7wpEfposbYOZ6FhXtPJ+q7q49FklI2IO/4ylfhgq+EQ6fZx3BkYg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\huuta\\OneDrive\\Máy tính\\course-edu-api\\course-edu-api.csproj",
+  "projectFilePath": "C:\\UNIVERSITY\\final\\backend\\course-edu-api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\huuta\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\huuta\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

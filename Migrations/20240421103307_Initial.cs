@@ -245,6 +245,7 @@ namespace course_edu_api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CommentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
                     PostId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
@@ -255,6 +256,12 @@ namespace course_edu_api.Migrations
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Comments_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -357,7 +364,9 @@ namespace course_edu_api.Migrations
                     RegisterAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsPayment = table.Column<bool>(type: "bit", nullable: false),
                     PaymentHistoryId = table.Column<long>(type: "bigint", nullable: true),
-                    CurrentLessonId = table.Column<long>(type: "bigint", nullable: true)
+                    CurrentLessonId = table.Column<long>(type: "bigint", nullable: true),
+                    NextLessonId = table.Column<long>(type: "bigint", nullable: true),
+                    PrevLessonId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -371,6 +380,16 @@ namespace course_edu_api.Migrations
                     table.ForeignKey(
                         name: "FK_UserCourse_Lessons_CurrentLessonId",
                         column: x => x.CurrentLessonId,
+                        principalTable: "Lessons",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserCourse_Lessons_NextLessonId",
+                        column: x => x.NextLessonId,
+                        principalTable: "Lessons",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserCourse_Lessons_PrevLessonId",
+                        column: x => x.PrevLessonId,
                         principalTable: "Lessons",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -412,6 +431,11 @@ namespace course_edu_api.Migrations
                 name: "IX_Comments_PostId",
                 table: "Comments",
                 column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_CategoryCourseId",
@@ -489,9 +513,19 @@ namespace course_edu_api.Migrations
                 column: "CurrentLessonId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserCourse_NextLessonId",
+                table: "UserCourse",
+                column: "NextLessonId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserCourse_PaymentHistoryId",
                 table: "UserCourse",
                 column: "PaymentHistoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserCourse_PrevLessonId",
+                table: "UserCourse",
+                column: "PrevLessonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserCourse_UserId",
@@ -514,6 +548,14 @@ namespace course_edu_api.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_PaymentHistories_Users_UserId",
+                table: "PaymentHistories");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_UserCourse_Users_UserId",
+                table: "UserCourse");
+
             migrationBuilder.DropForeignKey(
                 name: "FK_Courses_CategoriesCourse_CategoryCourseId",
                 table: "Courses");
@@ -560,6 +602,12 @@ namespace course_edu_api.Migrations
                 name: "Posts");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "UserSettings");
+
+            migrationBuilder.DropTable(
                 name: "CategoriesCourse");
 
             migrationBuilder.DropTable(
@@ -582,12 +630,6 @@ namespace course_edu_api.Migrations
 
             migrationBuilder.DropTable(
                 name: "VideoLesson");
-
-            migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "UserSettings");
         }
     }
 }

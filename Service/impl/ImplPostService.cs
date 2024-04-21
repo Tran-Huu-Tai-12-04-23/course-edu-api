@@ -71,7 +71,7 @@ public class ImplPostService : IPostService
 
     public async Task<PaginatedResponse<Post>> GetPostPagination(PaginationRequestDto<PostQueryDto> paginationRequestDto)
     {
-        var skip = (paginationRequestDto.PageNumber - 1) * paginationRequestDto.PageSize;
+        var skip = paginationRequestDto.PageNumber == 0 ? 0 : (paginationRequestDto.PageNumber - 1) * paginationRequestDto.PageSize;
         var take = paginationRequestDto.PageSize;
         var postQuery = paginationRequestDto.Where;
         IQueryable<Post> query = _context.Posts!;

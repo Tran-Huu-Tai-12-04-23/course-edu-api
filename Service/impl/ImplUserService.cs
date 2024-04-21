@@ -1,4 +1,6 @@
 ﻿using course_edu_api.Data;
+using course_edu_api.Data.RequestModels;
+using course_edu_api.Data.ResponseModels;
 using course_edu_api.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -61,5 +63,54 @@ public class ImplUserService : IUserService
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<PaginatedResponse<User>> GetUserPagination(PaginationRequestDto<UserQueryDto> paginationRequestDto)
+    {
+        
+        var skip = paginationRequestDto.PageNumber == 0 ? 0 : (paginationRequestDto.PageNumber - 1) * paginationRequestDto.PageSize;
+        var take = paginationRequestDto.PageSize;
+        var userQuery = paginationRequestDto.Where;
+        IQueryable<User> query = _context.Users!;
+
+        if (!String.IsNullOrEmpty(userQuery.Query))
+        {
+            query = query.Where(user =>
+                (user.FirstName != null && user.FirstName.Contains(userQuery.Query)) ||
+                (user.LastName != null && user.LastName.Contains(userQuery.Query)) ||
+                user.Email.Contains(userQuery.Query) ||
+                (user.FullName != null && user.FullName.Contains(userQuery.Query)) ||
+                (user.Bio != null && user.Bio.Contains(userQuery.Query))
+            );
+        }
+
+        query = query.OrderBy(user => user.Id);
+
+        var paginatedData = await query.Skip(skip).Take(take).ToListAsync();
+
+        return new PaginatedResponse<User>()
+        {
+            Data = paginatedData,
+            PageNumber = paginationRequestDto.PageNumber,
+            PageSize = paginationRequestDto.PageSize,
+            TotalItems = await query.CountAsync() 
+        };
+    }
+
+    public async Task<long> GetTotalUserByQuery(UserQueryDto userQueryDto)
+    {
+        var userQuery = userQueryDto;
+        IQueryable<User> query = _context.Users!;
+        if (!String.IsNullOrEmpty(userQuery.Query))
+        {
+            query = query.Where(user =>
+                (user.FirstName != null && user.FirstName.Contains(userQuery.Query)) ||
+                (user.LastName != null && user.LastName.Contains(userQuery.Query)) ||
+                user.Email.Contains(userQuery.Query) ||
+                (user.FullName != null && user.FullName.Contains(userQuery.Query)) ||
+                (user.Bio != null && user.Bio.Contains(userQuery.Query))
+            );
+        }
+        return await query.CountAsync();
     }
 }

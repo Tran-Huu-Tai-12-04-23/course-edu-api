@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\huuta\\OneDrive\\Máy tính\\course-edu-api\\course-edu-api.csproj": {}
+    "C:\\UNIVERSITY\\final\\backend\\course-edu-api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\huuta\\OneDrive\\Máy tính\\course-edu-api\\course-edu-api.csproj": {
+    "C:\\UNIVERSITY\\final\\backend\\course-edu-api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\huuta\\OneDrive\\Máy tính\\course-edu-api\\course-edu-api.csproj",
+        "projectUniqueName": "C:\\UNIVERSITY\\final\\backend\\course-edu-api.csproj",
         "projectName": "course-edu-api",
-        "projectPath": "C:\\Users\\huuta\\OneDrive\\Máy tính\\course-edu-api\\course-edu-api.csproj",
+        "projectPath": "C:\\UNIVERSITY\\final\\backend\\course-edu-api.csproj",
         "packagesPath": "C:\\Users\\huuta\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\huuta\\OneDrive\\Máy tính\\course-edu-api\\obj\\",
+        "outputPath": "C:\\UNIVERSITY\\final\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\huuta\\AppData\\Roaming\\NuGet\\NuGet.Config"
