@@ -103,7 +103,7 @@ namespace course_edu_api.Controllers
         }
         
         [HttpPost("pagination")]
-        public async Task<ActionResult> GetPostPagination(PaginationRequestDto<UserQueryDto> paginationRequestDto)
+        public async Task<ActionResult> GetUserPagination(PaginationRequestDto<UserQueryDto> paginationRequestDto)
         {
             try
             {
