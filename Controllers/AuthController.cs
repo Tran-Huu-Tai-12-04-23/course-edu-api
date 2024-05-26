@@ -143,7 +143,7 @@ namespace course_edu_api.Controllers
                var userSetting = await this._userSettingService.CreateUserSetting(new UserSetting());
                 model.UserSetting = userSetting;
                 var newUser = model;
-                model.VerifyAt = new DateTime();
+                model.VerifyAt = DateTime.UtcNow;
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
            }

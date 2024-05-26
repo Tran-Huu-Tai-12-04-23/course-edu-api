@@ -9,7 +9,7 @@ public class UserCourse
     public long Id { get; set; } 
     public User User{ get; set; }
     public Course Course { get; set; }
-    public DateTime RegisterAt { get; set; } = new DateTime();
+    public DateTime RegisterAt { get; set; } = DateTime.UtcNow;
     public bool IsPayment { get; set; }
     public List<Lesson> LessonPassed { get; set; } = new List<Lesson>();
     public List<NoteLesson>? Notes { get; set; } = new List<NoteLesson>();

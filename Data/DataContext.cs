@@ -184,7 +184,12 @@ namespace course_edu_api.Data
                     , typeCourses.Result[5]),
 
             };
-            // Add initial courses if the database is empty
+
+            foreach (var VARIABLE in Courses)
+            {
+                VARIABLE.Price = VARIABLE.Price * 100;
+            }
+            
             Courses.AddRange(courses);
             SaveChanges();
         }

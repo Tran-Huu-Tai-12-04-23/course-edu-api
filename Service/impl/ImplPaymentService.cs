@@ -47,7 +47,7 @@ public class ImplPaymentService : IPaymentService
         {
             var paymentHistory = await _context.PaymentHistories.FindAsync(paymentHistoryId);
             paymentHistory.IsPayment = true;
-            paymentHistory.PaymentAt = new DateTime();
+            paymentHistory.PaymentAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return true;
         }

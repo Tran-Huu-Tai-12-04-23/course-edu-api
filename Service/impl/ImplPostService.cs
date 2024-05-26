@@ -139,7 +139,7 @@ public class ImplPostService : IPostService
 
         postExist.IsApproved = true;
         postExist.Status = PostStatus.Published;
-        postExist.ApproveDate = new DateTime();
+        postExist.ApproveDate = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 
         return postExist;
@@ -152,7 +152,7 @@ public class ImplPostService : IPostService
 
         postExist.IsApproved = false;
         postExist.Status = PostStatus.REJECT;
-        postExist.ApproveDate = new DateTime();
+        postExist.ApproveDate = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 
         return postExist;

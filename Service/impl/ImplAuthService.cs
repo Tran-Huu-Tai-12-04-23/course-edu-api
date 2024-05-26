@@ -30,7 +30,7 @@ public class ImplAuthService : IAuthService
         {
             userEmail.TokenVerify =
                 Helper.JwtHelper.GenerateHash(userEmail.Email + userEmail.Password + verifyAccountRequestDto.Token);
-            userEmail.VerifyAt = new DateTime();
+            userEmail.VerifyAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return true;
         }else
