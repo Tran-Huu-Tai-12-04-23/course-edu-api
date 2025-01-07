@@ -1,24 +1,9 @@
 ﻿using course_edu_api.Data;
 using course_edu_api.Entities;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using Azure;
 using course_edu_api.Data.RequestModels;
-using course_edu_api.Data.ResponseModels;
-using course_edu_api.Helper;
 using course_edu_api.Service;
-using course_edu_api.Service.impl;
-using Microsoft.AspNetCore.Http.HttpResults;
+
 
 namespace course_edu_api.Controllers
 {

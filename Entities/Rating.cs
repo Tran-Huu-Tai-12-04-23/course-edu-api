@@ -6,4 +6,5 @@ public class Rating
     public string Content { get; set; }
     public DateTime RateAt { get; set; } = DateTime.UtcNow;
     public int Star  { get; set; }
+    public User User  { get; set; }
 }

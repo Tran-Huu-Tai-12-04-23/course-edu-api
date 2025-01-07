@@ -31,6 +31,8 @@ public class ImplCourseService : ICourseService
             .Include(c => c.GroupLessons.OrderBy(g => g.Index))
             .ThenInclude(g => g.Lessons)
             .ThenInclude(g => g.Video)
+            .Include(g => g.Ratings)
+            .ThenInclude(rate => rate.User)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
@@ -43,12 +45,7 @@ public class ImplCourseService : ICourseService
             .Take(size)
             .ToListAsync();
     }
-    
-    /// <summary>
-    /// Pagination request
-    /// </summary>
-    /// <param name="paginationRequestDto"></param>
-    /// <returns></returns>
+
     public async Task<PaginatedResponse<Course>> GetCoursePagination(PaginationRequestDto<CourseQueryDto> paginationRequestDto)
     {
         var skip = (paginationRequestDto.PageNumber - 1) * paginationRequestDto.PageSize;
@@ -414,4 +411,39 @@ public class ImplCourseService : ICourseService
             .Include(uc => uc.LessonPassed)
             .Where(uc => uc.User.Id == userId).ToListAsync();
     }
+
+    public async Task<Rating> RateCourse(RateDto data)
+    {
+        var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == data.CourseId);
+
+        if (course == null)
+        {
+            throw new Exception("Course not found!");
+        }
+
+        var user = await _context.Users.FindAsync(data.UserId);
+
+        if (user == null)
+        {
+            throw new Exception("User not found!");
+        }
+
+        var rate = new Rating
+        {
+            User = user,
+            RateAt = DateTime.UtcNow,
+            Content = data.Content,
+            Star = 5
+        };
+
+        _context.Ratings.Add(rate);
+
+        course.Ratings ??= new List<Rating>(); 
+        course.Ratings.Add(rate);
+
+        await _context.SaveChangesAsync();
+
+        return rate;
+    }
+
 }

@@ -12,7 +12,7 @@ using course_edu_api.Data;
 namespace course_edu_api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240421103307_Initial")]
+    [Migration("20250107134010_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace course_edu_api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -419,9 +419,14 @@ namespace course_edu_api.Migrations
                     b.Property<int>("Star")
                         .HasColumnType("int");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Ratings");
                 });
@@ -724,6 +729,14 @@ namespace course_edu_api.Migrations
                     b.HasOne("course_edu_api.Entities.Course", null)
                         .WithMany("Ratings")
                         .HasForeignKey("CourseId");
+
+                    b.HasOne("course_edu_api.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("course_edu_api.Entities.SubItemPost", b =>

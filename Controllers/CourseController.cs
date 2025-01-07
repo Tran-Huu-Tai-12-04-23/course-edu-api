@@ -22,6 +22,14 @@ namespace course_edu_api.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IPaymentService _paymentService;
         
+        
+        [HttpPost("search_pagination")]
+        public async Task<ActionResult> SearchPagination(PaginationRequestDto<CourseQueryDto> paginationRequestDto)
+        {
+            var groupedCourses = await _courseService.GetCoursePagination(paginationRequestDto);
+            return Ok(groupedCourses);
+        }
+        
         public CourseController(ICourseService courseService, ICategoryService categoryService, IPaymentService paymentService)
         {
             this._courseService = courseService;
@@ -326,7 +334,20 @@ namespace course_edu_api.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                return BadRequest(e.Message);
+            }
+        }
+        
+        [HttpPost("rate")]
+        public async Task<IActionResult> RateForCourse([FromBody] RateDto rateDto)
+        {
+            try
+            {
+                var res = await _courseService.RateCourse(rateDto);
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
                 return BadRequest(e.Message);
             }
         }

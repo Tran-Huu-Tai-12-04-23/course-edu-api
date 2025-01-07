@@ -1,5 +1,6 @@
 ﻿using course_edu_api.Data;
 using course_edu_api.Data.RequestModels;
+using course_edu_api.Data.ResponseModels;
 using course_edu_api.Entities;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -57,4 +58,22 @@ public class ImplPaymentService : IPaymentService
             return false;
         }
     }
+
+    public async Task<GetAllPaymentResponse> GetAllPayment()
+    {
+        var lstPayment = await _context.PaymentHistories.ToListAsync();
+
+        var totalPayment = lstPayment.Sum(payment =>
+        {
+            if (payment.IsPayment) return payment.Amount;
+            return 0;
+        });
+
+        double totalPaymentDouble = Convert.ToDouble(totalPayment);
+        
+        GetAllPaymentResponse res = new GetAllPaymentResponse(lstPayment, totalPaymentDouble);
+
+        return res;
+    }
+
 }

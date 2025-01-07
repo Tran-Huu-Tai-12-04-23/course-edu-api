@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "ImRBkQc41s/zGR3jNbC0Fu5gUAfHldWuz+PkR0gUt0E=",
+  "Hash": "oNt1Fxc1hmmjKsz0zbt7UhVv8Slq+vUriCGsuoc3p6s=",
   "Source": "course-edu-api",
   "BasePath": "_content/course-edu-api",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }

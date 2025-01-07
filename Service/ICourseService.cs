@@ -8,6 +8,7 @@ public interface ICourseService
 {
     Task<Course?> GetCourseById(long id);
     Task<List<Course>> GetAllCourses(int page, int size);
+
     Task<PaginatedResponse<Course>> GetCoursePagination(PaginationRequestDto<CourseQueryDto> paginationRequestDto);
     Task<Course?> CreateCourse(Course? newCourse);
     Task<Course> UpdateCourse(long id, CourseRequest updatedCourse);
@@ -28,4 +29,5 @@ public interface ICourseService
         ChangeCurrentLessonRequestDto changeCurrentLessonRequestDto);
 
     Task<List<UserCourse>> GetUserCourseByUser(long userId);
+    Task<Rating> RateCourse(RateDto data);
 }

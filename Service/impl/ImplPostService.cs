@@ -29,6 +29,7 @@ public class ImplPostService : IPostService
             .Include(p => p.Items) 
             .Include(p => p.User) 
             .Include(post => post.Comments)
+            .ThenInclude(postD => postD.User)
             .FirstOrDefaultAsync(p => p.Id == id); 
     }
 

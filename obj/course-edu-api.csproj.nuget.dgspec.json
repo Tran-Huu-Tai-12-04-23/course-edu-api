@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\UNIVERSITY\\final\\backend\\course-edu-api.csproj": {}
+    "/Users/genny/Desktop/University/52100997_52000708_52100990/course-edu-api/course-edu-api.csproj": {}
   },
   "projects": {
-    "C:\\UNIVERSITY\\final\\backend\\course-edu-api.csproj": {
+    "/Users/genny/Desktop/University/52100997_52000708_52100990/course-edu-api/course-edu-api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\UNIVERSITY\\final\\backend\\course-edu-api.csproj",
+        "projectUniqueName": "/Users/genny/Desktop/University/52100997_52000708_52100990/course-edu-api/course-edu-api.csproj",
         "projectName": "course-edu-api",
-        "projectPath": "C:\\UNIVERSITY\\final\\backend\\course-edu-api.csproj",
-        "packagesPath": "C:\\Users\\huuta\\.nuget\\packages\\",
-        "outputPath": "C:\\UNIVERSITY\\final\\backend\\obj\\",
+        "projectPath": "/Users/genny/Desktop/University/52100997_52000708_52100990/course-edu-api/course-edu-api.csproj",
+        "packagesPath": "/Users/genny/.nuget/packages/",
+        "outputPath": "/Users/genny/Desktop/University/52100997_52000708_52100990/course-edu-api/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\huuta\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/genny/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -57,7 +57,7 @@
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[8.0.2, )"
+              "version": "[8.0.6, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
@@ -89,6 +89,20 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.4, 8.0.4]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.osx-arm64",
+              "version": "[8.0.4, 8.0.4]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.4, 8.0.4]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -97,7 +111,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.100-preview.4.24267.66/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
